@@ -54,3 +54,14 @@ function countByStatus(s) {
   return s === 'all' ? rides.length : rides.filter(r => r.status === s).length;
 }
 
+/* ────────────────────────────────
+   STATE
+──────────────────────────────── */
+let state = {
+  tab:     'all',
+  search:  '',
+  sort:    'newest',
+  vehicle: 'all',
+  page:    1,
+  filterOpen: false,
+};
