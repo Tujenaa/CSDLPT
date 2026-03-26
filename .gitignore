@@ -83,4 +83,4 @@ build/
 
 uploads/
 cache/
-.env
+*.env
