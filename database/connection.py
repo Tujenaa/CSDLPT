@@ -117,37 +117,37 @@ def get_connection(region):
 
 def replicate_all():
     try:
-        # copy từ HCM master → HCM replica
-        master = create_connection(SERVER_CONFIG["south"]["primary"])
-        replica = create_connection(SERVER_CONFIG["south"]["replica"])
-
-        m_cur = master.cursor(dictionary=True)
-        r_cur = replica.cursor()
-
-        # ví dụ replicate bảng rides
-        m_cur.execute("SELECT * FROM rides")
-        rows = m_cur.fetchall()
-
-        r_cur.execute("DELETE FROM rides")
-
-        for row in rows:
-            r_cur.execute(
-                """INSERT INTO rides (
-                    ride_id,user_id,driver_id,
-                    pickup_location,dropoff_location,city,
-                    status,created_at,code,distance_km,duration_min,
-                    fare,vehicle,payment,user_rating,cancel_reason,
-                    region,ride_date,ride_time
-                ) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
-                tuple(row.values())
-            )
-
-        replica.commit()
-
-        m_cur.close()
-        r_cur.close()
-        master.close()
-        replica.close()
+        tables = ["users", "drivers", "rides"]
+        for region in ["south", "north"]:
+            master = create_connection(SERVER_CONFIG[region]["primary"])
+            replica = create_connection(SERVER_CONFIG[region]["replica"])
+            
+            m_cur = master.cursor(dictionary=True)
+            r_cur = replica.cursor()
+            
+            r_cur.execute("SET FOREIGN_KEY_CHECKS=0")
+            
+            for tbl in tables:
+                m_cur.execute(f"SELECT * FROM {tbl}")
+                rows = m_cur.fetchall()
+                
+                r_cur.execute(f"DELETE FROM {tbl}")
+                
+                if rows:
+                    cols = list(rows[0].keys())
+                    col_str = ", ".join(cols)
+                    val_str = ", ".join(["%s"] * len(cols))
+                    query = f"INSERT INTO {tbl} ({col_str}) VALUES ({val_str})"
+                    data = [tuple(row[c] for c in cols) for row in rows]
+                    r_cur.executemany(query, data)
+            
+            r_cur.execute("SET FOREIGN_KEY_CHECKS=1")
+            replica.commit()
+            
+            m_cur.close()
+            r_cur.close()
+            master.close()
+            replica.close()
 
         return True
 

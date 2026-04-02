@@ -34,8 +34,8 @@ def get_region_from_province(province: str) -> str:
 
 
 REGION_LABELS = {
-    "north": "🔵 Miền Bắc (Hà Nội)",
-    "south": "🟢 Miền Nam (TP.HCM)",
+    "north": "Mien Bac (Ha Noi)",
+    "south": "Mien Nam (TP.HCM)",
 }
 
 REGION_COLORS = {

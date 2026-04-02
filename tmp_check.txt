@@ -1,0 +1,1 @@
+COLUMNS: ['user_id', 'name', 'phone', 'password', 'city']
