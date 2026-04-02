@@ -159,16 +159,16 @@ def _tab_overview():
 
 # ──────────────────────────────────────────────────────────────
 def _tab_failover():
-    st.markdown("""
-        <p style="font-weight:700; font-size:1rem; color:#0f172a; margin-bottom:0.25rem;">
-            Demo Failover
-        </p>
-        <p style="color:#64748b; font-size:0.875rem; margin-bottom:1.25rem;">
-            Bật / tắt các server để demo
-            <strong style="color:#0f172a;">Automatic Failover</strong>.
-            Khi Primary sập, ứng dụng tự chuyển sang Replica (Read-Only).
-        </p>
-    """, unsafe_allow_html=True)
+    # st.markdown("""
+    #     <p style="font-weight:700; font-size:1rem; color:#0f172a; margin-bottom:0.25rem;">
+    #         Demo Failover
+    #     </p>
+    #     <p style="color:#64748b; font-size:0.875rem; margin-bottom:1.25rem;">
+    #         Bật / tắt các server để demo
+    #         <strong style="color:#0f172a;">Automatic Failover</strong>.
+    #         Khi Primary sập, ứng dụng tự chuyển sang Replica (Read-Only).
+    #     </p>
+    # """, unsafe_allow_html=True)
 
     status = get_server_status()
 
@@ -219,110 +219,110 @@ def _tab_failover():
 
     st.markdown("---")
 
-    # ── Kịch bản nhanh ──
-    st.markdown(
-        '<p style="font-weight:700; font-size:0.95rem; color:#0f172a; margin-bottom:0.75rem;">'
-        'Kịch bản Demo nhanh</p>',
-        unsafe_allow_html=True,
-    )
-    sc1, sc2, sc3 = st.columns(3)
+    # # ── Kịch bản nhanh ──
+    # st.markdown(
+    #     '<p style="font-weight:700; font-size:0.95rem; color:#0f172a; margin-bottom:0.75rem;">'
+    #     'Kịch bản Demo nhanh</p>',
+    #     unsafe_allow_html=True,
+    # )
+    # sc1, sc2, sc3 = st.columns(3)
 
-    if sc1.button("Reset — Tất cả Online", use_container_width=True, type="primary"):
-        for key, _, _ in servers:
-            set_server_status(key, True)
-        st.success("Tất cả server đã online.")
-        st.rerun()
+    # if sc1.button("Reset — Tất cả Online", use_container_width=True, type="primary"):
+    #     for key, _, _ in servers:
+    #         set_server_status(key, True)
+    #     st.success("Tất cả server đã online.")
+    #     st.rerun()
 
-    if sc2.button("Tắt Primary Miền Nam", use_container_width=True):
-        set_server_status("south_primary", False)
-        st.warning("Primary Miền Nam đã tắt → Failover sang Replica (Read-Only).")
-        st.rerun()
+    # if sc2.button("Tắt Primary Miền Nam", use_container_width=True):
+    #     set_server_status("south_primary", False)
+    #     st.warning("Primary Miền Nam đã tắt → Failover sang Replica (Read-Only).")
+    #     st.rerun()
 
-    if sc3.button("Tắt Primary Miền Bắc", use_container_width=True):
-        set_server_status("north_primary", False)
-        st.warning("Primary Miền Bắc đã tắt → Failover sang Replica (Read-Only).")
-        st.rerun()
+    # if sc3.button("Tắt Primary Miền Bắc", use_container_width=True):
+    #     set_server_status("north_primary", False)
+    #     st.warning("Primary Miền Bắc đã tắt → Failover sang Replica (Read-Only).")
+    #     st.rerun()
 
-    st.markdown("---")
+    # st.markdown("---")
 
-    # ── Kiểm chứng Read-Only ──
-    st.markdown(
-        '<p style="font-weight:700; font-size:0.95rem; color:#0f172a; margin-bottom:0.5rem;">'
-        'Kiểm chứng chế độ Read-Only</p>',
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        '<p style="color:#64748b; font-size:0.85rem; margin-bottom:0.75rem;">'
-        'Khi Primary sập, thử ghi vào Replica để xem thông báo lỗi:</p>',
-        unsafe_allow_html=True,
-    )
+    # # ── Kiểm chứng Read-Only ──
+    # st.markdown(
+    #     '<p style="font-weight:700; font-size:0.95rem; color:#0f172a; margin-bottom:0.5rem;">'
+    #     'Kiểm chứng chế độ Read-Only</p>',
+    #     unsafe_allow_html=True,
+    # )
+    # st.markdown(
+    #     '<p style="color:#64748b; font-size:0.85rem; margin-bottom:0.75rem;">'
+    #     'Khi Primary sập, thử ghi vào Replica để xem thông báo lỗi:</p>',
+    #     unsafe_allow_html=True,
+    # )
 
-    demo_region = st.selectbox(
-        "Chọn khu vực kiểm tra:",
-        ["south", "north"],
-        format_func=lambda x: REGION_LABELS[x],
-    )
+    # demo_region = st.selectbox(
+    #     "Chọn khu vực kiểm tra:",
+    #     ["south", "north"],
+    #     format_func=lambda x: REGION_LABELS[x],
+    # )
 
-    col_r, col_w = st.columns(2)
+    # col_r, col_w = st.columns(2)
 
-    if col_r.button("Thử đọc (SELECT)", use_container_width=True, type="primary"):
-        try:
-            db   = get_connection(demo_region)
-            rows = db.fetchall(
-                "SELECT code, status, fare FROM rides WHERE region=%s LIMIT 3",
-                (demo_region,),
-            )
-            st.success(f"Đọc thành công từ **{db.server_label}**")
-            for r in rows:
-                st.code(f"Mã: {r['code']} | Trạng thái: {r['status']} | Cước: {r['fare']:,}đ")
-        except ConnectionError as e:
-            st.markdown(f'<div class="alert alert-err">{e}</div>', unsafe_allow_html=True)
+    # if col_r.button("Thử đọc (SELECT)", use_container_width=True, type="primary"):
+    #     try:
+    #         db   = get_connection(demo_region)
+    #         rows = db.fetchall(
+    #             "SELECT code, status, fare FROM rides WHERE region=%s LIMIT 3",
+    #             (demo_region,),
+    #         )
+    #         st.success(f"Đọc thành công từ **{db.server_label}**")
+    #         for r in rows:
+    #             st.code(f"Mã: {r['code']} | Trạng thái: {r['status']} | Cước: {r['fare']:,}đ")
+    #     except ConnectionError as e:
+    #         st.markdown(f'<div class="alert alert-err">{e}</div>', unsafe_allow_html=True)
 
-    if col_w.button("Thử ghi (INSERT)", use_container_width=True):
-        try:
-            db = get_connection(demo_region)
-            db.execute(
-                "INSERT INTO rides (code,user_id,pickup_location,dropoff_location,"
-                "fare,status,region) VALUES (%s,%s,%s,%s,%s,%s,%s)",
-                ("TEST-000", 1, "Test A", "Test B", 10000, "ongoing", demo_region),
-            )
-            db.commit()
-            st.success("Ghi thành công (Primary đang online).")
-            db.execute("DELETE FROM rides WHERE code='TEST-000'")
-            db.commit()
-        except PermissionError as e:
-            st.markdown(f'<div class="alert alert-warn">{e}</div>', unsafe_allow_html=True)
-        except ConnectionError as e:
-            st.markdown(f'<div class="alert alert-err">{e}</div>', unsafe_allow_html=True)
-        except Exception as e:
-            st.error(f"Lỗi: {e}")
+    # if col_w.button("Thử ghi (INSERT)", use_container_width=True):
+    #     try:
+    #         db = get_connection(demo_region)
+    #         db.execute(
+    #             "INSERT INTO rides (code,user_id,pickup_location,dropoff_location,"
+    #             "fare,status,region) VALUES (%s,%s,%s,%s,%s,%s,%s)",
+    #             ("TEST-000", 1, "Test A", "Test B", 10000, "ongoing", demo_region),
+    #         )
+    #         db.commit()
+    #         st.success("Ghi thành công (Primary đang online).")
+    #         db.execute("DELETE FROM rides WHERE code='TEST-000'")
+    #         db.commit()
+    #     except PermissionError as e:
+    #         st.markdown(f'<div class="alert alert-warn">{e}</div>', unsafe_allow_html=True)
+    #     except ConnectionError as e:
+    #         st.markdown(f'<div class="alert alert-err">{e}</div>', unsafe_allow_html=True)
+    #     except Exception as e:
+    #         st.error(f"Lỗi: {e}")
 
 
 # ──────────────────────────────────────────────────────────────
 def _tab_replication():
-    st.markdown(
-        '<p style="font-weight:700; font-size:1rem; color:#0f172a; margin-bottom:0.5rem;">'
-        'Master-Slave Replication</p>',
-        unsafe_allow_html=True,
-    )
+    # st.markdown(
+    #     '<p style="font-weight:700; font-size:1rem; color:#0f172a; margin-bottom:0.5rem;">'
+    #     'Master-Slave Replication</p>',
+    #     unsafe_allow_html=True,
+    # )
 
-    steps = [
-        ("#dcfce7", "#166534", "Mọi thao tác <strong>ghi</strong> (INSERT / UPDATE / DELETE) đều vào <strong>Primary</strong>"),
-        ("#dbeafe", "#1e40af", "Primary đồng bộ dữ liệu sang <strong>Replica</strong> theo chu kỳ"),
-        ("#fef3c7", "#92400e", "Replica chỉ phục vụ <strong>đọc</strong> (SELECT)"),
-        ("#fee2e2", "#991b1b", "Thực tế: dùng MySQL Binlog Replication / PostgreSQL Streaming Replication"),
-    ]
+    # steps = [
+    #     ("#dcfce7", "#166534", "Mọi thao tác <strong>ghi</strong> (INSERT / UPDATE / DELETE) đều vào <strong>Primary</strong>"),
+    #     ("#dbeafe", "#1e40af", "Primary đồng bộ dữ liệu sang <strong>Replica</strong> theo chu kỳ"),
+    #     ("#fef3c7", "#92400e", "Replica chỉ phục vụ <strong>đọc</strong> (SELECT)"),
+    #     ("#fee2e2", "#991b1b", "Thực tế: dùng MySQL Binlog Replication / PostgreSQL Streaming Replication"),
+    # ]
 
-    st.markdown('<div class="card" style="margin-bottom:1.5rem;"><p class="section-label">Cơ chế hoạt động</p><div style="margin-top:0.5rem;">', unsafe_allow_html=True)
-    for i, (bg, color, text) in enumerate(steps, 1):
-        st.markdown(f"""
-            <div style="display:flex; gap:0.75rem; align-items:flex-start; margin-bottom:0.6rem;">
-                <span style="background:{bg};color:{color};font-size:0.72rem;font-weight:800;
-                      padding:2px 8px;border-radius:12px;white-space:nowrap;margin-top:1px;">{i}</span>
-                <p style="color:#334155; font-size:0.875rem; margin:0; line-height:1.5;">{text}</p>
-            </div>
-        """, unsafe_allow_html=True)
-    st.markdown('</div></div>', unsafe_allow_html=True)
+    # st.markdown('<div class="card" style="margin-bottom:1.5rem;"><p class="section-label">Cơ chế hoạt động</p><div style="margin-top:0.5rem;">', unsafe_allow_html=True)
+    # for i, (bg, color, text) in enumerate(steps, 1):
+    #     st.markdown(f"""
+    #         <div style="display:flex; gap:0.75rem; align-items:flex-start; margin-bottom:0.6rem;">
+    #             <span style="background:{bg};color:{color};font-size:0.72rem;font-weight:800;
+    #                   padding:2px 8px;border-radius:12px;white-space:nowrap;margin-top:1px;">{i}</span>
+    #             <p style="color:#334155; font-size:0.875rem; margin:0; line-height:1.5;">{text}</p>
+    #         </div>
+    #     """, unsafe_allow_html=True)
+    # st.markdown('</div></div>', unsafe_allow_html=True)
 
     col_sync, _ = st.columns([1, 2])
     if col_sync.button("Đồng bộ tất cả Replica", type="primary", use_container_width=True):
@@ -395,30 +395,35 @@ def _tab_replication():
 
 # ──────────────────────────────────────────────────────────────
 def _tab_testcases():
-    st.markdown("""
-        <p style="font-weight:700; font-size:1rem; color:#0f172a; margin-bottom:0.25rem;">
-            Test Cases
-        </p>
-        <p style="color:#64748b; font-size:0.875rem; margin-bottom:1.25rem;">
-            Kiểm tra các yêu cầu chính của đồ án.
-            Nhấn <strong style="color:#0f172a;">Chạy test</strong> để thực thi.
-        </p>
-    """, unsafe_allow_html=True)
+    # st.markdown("""
+    #     <p style="font-weight:700; font-size:1rem; color:#0f172a; margin-bottom:0.25rem;">
+    #         Test Cases
+    #     </p>
+    #     <p style="color:#64748b; font-size:0.875rem; margin-bottom:1.25rem;">
+    #         Kiểm tra các yêu cầu chính của đồ án.
+    #         Nhấn <strong style="color:#0f172a;">Chạy test</strong> để thực thi.
+    #     </p>
+    # """, unsafe_allow_html=True)
 
     tests = [
         {"id":"TC-01","name":"Định tuyến theo vị trí — Miền Nam",
          "desc":"Người dùng chọn TP.HCM → kết nối Server Miền Nam","fn":_tc_routing_south},
         {"id":"TC-02","name":"Định tuyến theo vị trí — Miền Bắc",
          "desc":"Người dùng chọn Hà Nội → kết nối Server Miền Bắc","fn":_tc_routing_north},
-        {"id":"TC-03","name":"Failover — Đọc khi Primary sập",
-         "desc":"Tắt Primary Miền Nam → vẫn đọc được dữ liệu từ Replica","fn":_tc_failover_read},
-        {"id":"TC-04","name":"Read-Only — Chặn ghi khi dùng Replica",
-         "desc":"Khi dùng Replica, thao tác INSERT phải bị từ chối","fn":_tc_readonly_write},
-        {"id":"TC-05","name":"Replication — Dữ liệu đồng bộ Primary → Replica",
-         "desc":"Ghi vào Primary, sync, kiểm tra Replica có bản ghi mới","fn":_tc_replication},
-        {"id":"TC-06","name":"Cả hai server đều sập — Báo lỗi đúng",
-         "desc":"Tắt cả Primary & Replica → phải báo ConnectionError","fn":_tc_both_down},
     ]
+
+    for region in SERVER_CONFIG.keys():
+        r_lab = REGION_LABELS[region]
+        tests.extend([
+            {"id":f"TC-03-{region}","name":f"Failover ({r_lab})",
+             "desc":f"Tắt Primary {r_lab} → vẫn đọc được dữ liệu từ Replica","fn":lambda r=region: _tc_failover_read(r)},
+            {"id":f"TC-04-{region}","name":f"Read-Only ({r_lab})",
+             "desc":f"Khi dùng Replica {r_lab}, thao tác INSERT phải bị từ chối","fn":lambda r=region: _tc_readonly_write(r)},
+            {"id":f"TC-05-{region}","name":f"Replication ({r_lab})",
+             "desc":f"Ghi vào Primary {r_lab}, sync, kiểm tra Replica","fn":lambda r=region: _tc_replication(r)},
+            {"id":f"TC-06-{region}","name":f"Kết nối ({r_lab}) sập toàn bộ",
+             "desc":f"Tắt cả Primary & Replica {r_lab} → ConnectionError","fn":lambda r=region: _tc_both_down(r)},
+        ])
 
     for t in tests:
         with st.expander(f"{t['id']} — {t['name']}", expanded=False):
@@ -429,7 +434,10 @@ def _tab_testcases():
             )
             if st.button(f"Chạy {t['id']}", key=f"run_{t['id']}", type="primary"):
                 with st.spinner("Đang chạy..."):
-                    result, passed, detail = t["fn"]()
+                    if callable(t["fn"]):
+                        result, passed, detail = t["fn"]()
+                    else:
+                        result, passed, detail = ("Lỗi hàm test", False, None)
                 if passed:
                     st.markdown(
                         f'<div class="alert alert-ok"><strong>PASSED</strong> — {result}</div>',
@@ -471,64 +479,69 @@ def _tc_routing_north():
         return str(e), False, None
 
 
-def _tc_failover_read():
+def _tc_failover_read(region):
+    p_key = f"{region}_primary"
+    r_key = f"{region}_replica"
     try:
-        set_server_status("south_primary", False)
-        set_server_status("south_replica", True)
+        set_server_status(p_key, False)
+        set_server_status(r_key, True)
         replicate_all()
-        db   = get_connection("south")
-        rows = db.fetchall("SELECT code, status FROM rides WHERE region='south' LIMIT 3")
-        set_server_status("south_primary", True)
+        db   = get_connection(region)
+        rows = db.fetchall(f"SELECT code, status FROM rides WHERE region=%s LIMIT 3", (region,))
+        set_server_status(p_key, True)
         detail = "\n".join(f"{r['code']} — {r['status']}" for r in rows)
         return (
-            f"Đọc được {len(rows)} bản ghi từ Replica",
+            f"Đọc được {len(rows)} bản ghi từ Replica ({region})",
             db.is_failover and len(rows) > 0,
             f"Kết nối: {db.server_label}\n---\n{detail}",
         )
     except Exception as e:
-        set_server_status("south_primary", True)
+        set_server_status(p_key, True)
         return str(e), False, None
 
 
-def _tc_readonly_write():
+def _tc_readonly_write(region):
+    p_key = f"{region}_primary"
+    r_key = f"{region}_replica"
     try:
-        set_server_status("south_primary", False)
-        set_server_status("south_replica", True)
+        set_server_status(p_key, False)
+        set_server_status(r_key, True)
         replicate_all()
-        db = get_connection("south")
+        db = get_connection(region)
         try:
             db.execute(
                 "INSERT INTO rides (code,user_id,pickup_location,dropoff_location,"
                 "fare,status,region) VALUES (%s,%s,%s,%s,%s,%s,%s)",
-                ("TC04-TEST", 1, "A", "B", 1000, "ongoing", "south"),
+                (f"TC04-{region.upper()}", 1, "A", "B", 1000, "ongoing", region),
             )
-            set_server_status("south_primary", True)
+            set_server_status(p_key, True)
             return "Ghi thành công — lẽ ra phải bị chặn!", False, None
         except PermissionError as pe:
-            set_server_status("south_primary", True)
+            set_server_status(p_key, True)
             return "PermissionError được raise đúng", True, str(pe)
     except Exception as e:
-        set_server_status("south_primary", True)
+        set_server_status(p_key, True)
         return str(e), False, None
 
 
-def _tc_replication():
+def _tc_replication(region):
     import uuid
-    test_code = f"SYNC-{uuid.uuid4().hex[:6].upper()}"
+    test_code = f"SYNC-{region[:1].upper()}-{uuid.uuid4().hex[:4].upper()}"
+    p_key = f"{region}_primary"
     try:
-        set_server_status("south_primary", True)
-        primary_path = SERVER_CONFIG["south"]["primary"]
+        set_server_status(p_key, True)
+        primary_path = SERVER_CONFIG[region]["primary"]
         raw_primary  = _get_raw_connection(primary_path)
         cur_primary  = raw_primary.cursor(dictionary=True)
         cur_primary.execute(
             "INSERT IGNORE INTO rides (code,user_id,pickup_location,dropoff_location,"
             "fare,status,region) VALUES (%s,%s,%s,%s,%s,%s,%s)",
-            (test_code, 1, "Replication Test A", "Replication Test B", 1000, "completed", "south"),
+            (test_code, 1, "Replication Test A", "Replication Test B", 1000, "completed", region),
         )
         raw_primary.commit()
         replicate_all()
 
-        replica_path = SERVER_CONFIG["south"]["replica"]
+        replica_path = SERVER_CONFIG[region]["replica"]
         raw_replica  = _get_raw_connection(replica_path)
         cur_replica  = raw_replica.cursor(dictionary=True)
         cur_replica.execute("SELECT code FROM rides WHERE code=%s", (test_code,))
@@ -539,7 +552,7 @@ def _tc_replication():
 
         found = row is not None
         return (
-            f"Bản ghi '{test_code}' {'tìm thấy' if found else 'KHÔNG tìm thấy'} trong Replica",
+            f"Bản ghi '{test_code}' {'tìm thấy' if found else 'KHÔNG tìm thấy'} trong Replica {region}",
             found,
             f"Test code: {test_code}\nReplica result: {dict(row) if row else None}",
         )
@@ -547,20 +560,22 @@ def _tc_replication():
         return str(e), False, None
 
 
-def _tc_both_down():
+def _tc_both_down(region):
+    p_key = f"{region}_primary"
+    r_key = f"{region}_replica"
     try:
-        set_server_status("south_primary", False)
-        set_server_status("south_replica", False)
+        set_server_status(p_key, False)
+        set_server_status(r_key, False)
         try:
-            get_connection("south")
-            set_server_status("south_primary", True)
-            set_server_status("south_replica", True)
+            get_connection(region)
+            set_server_status(p_key, True)
+            set_server_status(r_key, True)
             return "Không raise ConnectionError — lỗi!", False, None
         except ConnectionError as ce:
-            set_server_status("south_primary", True)
-            set_server_status("south_replica", True)
-            return "ConnectionError được raise đúng khi cả hai server sập", True, str(ce)
+            set_server_status(p_key, True)
+            set_server_status(r_key, True)
+            return f"ConnectionError được raise đúng khi cả hai server {region} sập", True, str(ce)
     except Exception as e:
-        set_server_status("south_primary", True)
-        set_server_status("south_replica", True)
+        set_server_status(p_key, True)
+        set_server_status(r_key, True)
         return str(e), False, None

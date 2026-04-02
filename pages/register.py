@@ -1,7 +1,7 @@
 """pages/register.py — Trang đăng ký"""
 
 import streamlit as st
-from utils.region import ALL_PROVINCES, get_region_from_province, REGION_LABELS
+from utils.region import ALL_PROVINCES, get_region_from_province, REGION_LABELS, get_region_from_coords
 from database.connection import get_connection
 
 
@@ -60,12 +60,28 @@ def render():
             </div>
         """, unsafe_allow_html=True)
 
-        province = st.selectbox(
-            "Tỉnh / Thành phố",
-            ALL_PROVINCES,
-            index=ALL_PROVINCES.index("TP. Hồ Chí Minh") if "TP. Hồ Chí Minh" in ALL_PROVINCES else 0,
+        loc_method = st.radio(
+            "Phương thức định vị",
+            ["Chọn Tỉnh/Thành", "Giả lập toạ độ GPS"],
+            horizontal=True,
+            label_visibility="collapsed",
+            key="reg_loc_method"
         )
-        selected_region = get_region_from_province(province)
+        
+        if loc_method == "Chọn Tỉnh/Thành":
+            province = st.selectbox(
+                "Tỉnh / Thành phố",
+                ALL_PROVINCES,
+                index=ALL_PROVINCES.index("TP. Hồ Chí Minh") if "TP. Hồ Chí Minh" in ALL_PROVINCES else 0,
+                key="reg_province"
+            )
+            selected_region = get_region_from_province(province)
+        else:
+            c1, c2 = st.columns(2)
+            lat = c1.number_input("Vĩ độ (Lat)", value=10.8231, format="%.6f", key="reg_lat")
+            lon = c2.number_input("Kinh độ (Lon)", value=106.6297, format="%.6f", key="reg_lon")
+            selected_region = get_region_from_coords(lat, lon)
+
         rlabel = REGION_LABELS[selected_region]
         st.markdown(
             f'<div class="alert alert-info" style="margin-top:0.5rem; font-size:0.85rem;">'
